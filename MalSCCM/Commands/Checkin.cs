@@ -16,7 +16,7 @@ namespace MalSCCM.Commands
                 Inspect.ServerName = arguments["/server"];
             }
 
-            Console.WriteLine("[*] Action: Manipulating SCCM Applications");
+            Console.WriteLine("[*] Action: Causing SCCM poll");
 
             if (arguments.ContainsKey("/groupname"))
             {
@@ -40,7 +40,7 @@ namespace MalSCCM.Commands
                 Console.WriteLine("[*] Action: Forcing Group To Checkin for Updates");
                 Check.FbSCCMDeviceCheckin();
             }
-            Console.WriteLine("\r\n[*] App complete\r\n");
+            Console.WriteLine("\r\n[*] Checkin complete\r\n");
         }
     }
 }
