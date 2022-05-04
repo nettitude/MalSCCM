@@ -6,11 +6,17 @@ Typically deployments of SCCM will either have the management server and the pri
 
 If that is not the case you will need to compromise the management host returned with locate so that you can then run locate again on that host and get the primary server hostname. Once you have that and admin access you are good to go! 
 
-## Credits 
+# Blog
+
+For more information on usage of the tool, refer to the blog below.
+
+* https://labs.nettitude.com/blog/introducing-malsccm/
+
+# Credits 
 
 Massive credit to PowerSCCM (https://github.com/PowerShellMafia/PowerSCCM) which this is all based off, this would not have been done without the work of @harmj0y, @jaredcatkinson, @enigma0x3, @mattifestation. 
 
-## Attack Flow 
+# Attack Flow 
 
 * Compromise client, use locate to find management server 
 * Compromise management server, use locate to find primary server
@@ -24,7 +30,7 @@ Massive credit to PowerSCCM (https://github.com/PowerShellMafia/PowerSCCM) which
 * Cleanup the application and deployment
 * Delete the group
 
-## Help menu 
+# Help menu 
 
 ```
 Commands listed below have optional parameters in <>. 
