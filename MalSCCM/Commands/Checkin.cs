@@ -5,9 +5,7 @@ namespace MalSCCM.Commands;
 
 public class Checkin : ICommand
 {
-
-    public static string CommandName => "checkin";
-
+    public string CommandName => "checkin";
 
     public void Execute(Dictionary<string, string> arguments)
     {

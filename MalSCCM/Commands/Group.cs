@@ -5,8 +5,8 @@ namespace MalSCCM.Commands;
 
 public class Group : ICommand
 {
-
-    public static string CommandName => "group";
+    public string CommandName => "group";
+    
     public static string GroupName = "";
     public static string GroupType = "";
     public static string SystemCollectionID = "";
@@ -15,7 +15,6 @@ public class Group : ICommand
     public static string UserName = "";
     public static string DeviceName = "";
     public static string ResourceID = "";
-
 
     public void Execute(Dictionary<string, string> arguments)
     {

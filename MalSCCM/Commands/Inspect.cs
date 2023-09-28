@@ -5,8 +5,8 @@ namespace MalSCCM.Commands;
 
 public class Inspect : ICommand
 {
-
-    public static string CommandName => "inspect";
+    public string CommandName => "inspect";
+    
     public static string SiteCode = "";
     public static string ServerName = "localhost";
 

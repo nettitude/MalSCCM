@@ -6,7 +6,8 @@ namespace MalSCCM.Commands;
 public class App : ICommand
 {
 
-    public static string CommandName => "app";
+    public string CommandName => "app";
+    
     public static string AppName = "";
     public static string UNCPath = "";
     public static string AssignmentName = "";

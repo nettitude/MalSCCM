@@ -5,8 +5,8 @@ namespace MalSCCM.Commands;
 
 public class Locate : ICommand
 {
-
-    public static string CommandName => "locate";
+    public string CommandName => "locate";
+    
     public static string SiteCode = "";
     public static string ServerName = "localhost";
 
