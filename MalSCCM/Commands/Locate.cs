@@ -12,9 +12,9 @@ public class Locate : ICommand
 
     public void Execute(Dictionary<string, string> arguments)
     {
-        if (arguments.ContainsKey("/server"))
+        if (arguments.TryGetValue("/server", out var argument))
         {
-            ServerName = arguments["/server"];
+            ServerName = argument;
         }
 
         Console.WriteLine("[*] Action: Locating SCCM Management Servers");

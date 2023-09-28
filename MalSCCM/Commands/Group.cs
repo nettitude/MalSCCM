@@ -18,31 +18,31 @@ public class Group : ICommand
 
     public void Execute(Dictionary<string, string> arguments)
     {
-        if (arguments.ContainsKey("/server"))
+        if (arguments.TryGetValue("/server", out var argument))
         {
-            Inspect.ServerName = arguments["/server"];
+            Inspect.ServerName = argument;
         }
 
         Console.WriteLine("[*] Action: Manipulating SCCM Groups");
 
-        if (arguments.ContainsKey("/groupname"))
+        if (arguments.TryGetValue("/groupname", out var argument1))
         {
-            GroupName = arguments["/groupname"];
+            GroupName = argument1;
         }
 
-        if (arguments.ContainsKey("/grouptype"))
+        if (arguments.TryGetValue("/grouptype", out var argument2))
         {
-            GroupType = arguments["/grouptype"];
+            GroupType = argument2;
         }
 
-        if (arguments.ContainsKey("/user"))
+        if (arguments.TryGetValue("/user", out var argument3))
         {
-            UserName = arguments["/user"];
+            UserName = argument3;
         }
 
-        if (arguments.ContainsKey("/host"))
+        if (arguments.TryGetValue("/host", out var argument4))
         {
-            DeviceName = arguments["/host"];
+            DeviceName = argument4;
         }
 
         if (!Enum.FbGetSiteScope())
@@ -90,7 +90,6 @@ public class Group : ICommand
             Console.WriteLine("\r\n[*] Action: Adding Device");
             Groups.FbAddDeviceToSCCMCollection();
         }
-
 
         Console.WriteLine("\r\n[*] Group complete\r\n");
     }

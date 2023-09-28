@@ -9,16 +9,16 @@ public class Checkin : ICommand
 
     public void Execute(Dictionary<string, string> arguments)
     {
-        if (arguments.ContainsKey("/server"))
+        if (arguments.TryGetValue("/server", out var argument))
         {
-            Inspect.ServerName = arguments["/server"];
+            Inspect.ServerName = argument;
         }
 
         Console.WriteLine("[*] Action: Causing SCCM poll");
 
-        if (arguments.ContainsKey("/groupname"))
+        if (arguments.TryGetValue("/groupname", out var argument1))
         {
-            Group.GroupName = arguments["/groupname"];
+            Group.GroupName = argument1;
         }
 
         if (!Enum.FbGetSiteScope())
@@ -38,6 +38,7 @@ public class Checkin : ICommand
             Console.WriteLine("[*] Action: Forcing Group To Checkin for Updates");
             Check.FbSCCMDeviceCheckin();
         }
+        
         Console.WriteLine("\r\n[*] Checkin complete\r\n");
     }
 }

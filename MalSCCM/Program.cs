@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using MalSCCM.Args;
 
 namespace MalSCCM;
 
-class Program
+public static class Program
 {
     private static void MainExecute(string commandName, Dictionary<string, string> parsedArgs)
     {
@@ -31,6 +32,7 @@ class Program
     {
         // try to parse the command line arguments, show usage on failure and then bail
         var parsed = ArgumentParser.Parse(args);
+
         if (parsed.ParsedOk == false)
         {
             Info.ShowLogo();
@@ -39,8 +41,6 @@ class Program
         }
 
         var commandName = args.Length != 0 ? args[0] : "";
-
         MainExecute(commandName, parsed.Arguments);
-
     }
 }

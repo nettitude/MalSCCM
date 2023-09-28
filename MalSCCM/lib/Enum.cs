@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Management;
 using Microsoft.Win32;
+
 using MalSCCM.Commands;
 
-public class Enum
+public static class Enum
 {
     public static bool FbGetSiteScope()
     {
@@ -18,7 +19,6 @@ public class Enum
             {
                 var siteCode = result.GetPropertyValue("Name").ToString();
                 var managementServer = result.GetPropertyValue("CurrentManagementPoint").ToString();
-
                 
                 if (!string.IsNullOrEmpty(siteCode))
                 {
@@ -41,6 +41,7 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSiteScope2()
     {
         try
@@ -74,12 +75,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSiteScope3()
     {
         try
         {
             const string keyName = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SMS\Mobile Client";
-            string assignedsitecode = (string)Registry.GetValue(keyName, "AssignedSiteCode", "No assigned site found, is this machine managed by SCCM?");
+            var assignedsitecode = (string)Registry.GetValue(keyName, "AssignedSiteCode", "No assigned site found, is this machine managed by SCCM?");
 
             Console.WriteLine("SiteCode: " + assignedsitecode);
             Inspect.SiteCode = assignedsitecode;
@@ -94,6 +96,7 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMComputer()
     {
         try
@@ -122,6 +125,7 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMADForest()
     {
         try
@@ -150,6 +154,7 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMApplication()
     {
         try
@@ -178,6 +183,7 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMPackage()
     {
         try
@@ -206,6 +212,7 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMCollection()
     {
         try
@@ -273,6 +280,7 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMDeployments()
     {
         try
@@ -306,16 +314,17 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMPrimaryServerRegKey()
     {
         try
         {
             const string keyName = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SMS\DP";
-            string mgmtServer = (string)Registry.GetValue(keyName, "ManagementPoints", "Management key not found, are you an SCCM client?");
-            string siteServer = (string)Registry.GetValue(keyName, "SiteServer", "Key not found, are you on a management server?");
+            var mgmtServer = (string)Registry.GetValue(keyName, "ManagementPoints", "Management key not found, are you an SCCM client?");
+            var siteServer = (string)Registry.GetValue(keyName, "SiteServer", "Key not found, are you on a management server?");
 
             const string keyNameID = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SMS\Identification";
-            string siteServerID = (string)Registry.GetValue(keyNameID, "Site Server", "Key not found, are you on a management server?");
+            var siteServerID = (string)Registry.GetValue(keyNameID, "Site Server", "Key not found, are you on a management server?");
 
             Console.WriteLine("Management Server: {0}", mgmtServer);
             Console.WriteLine("Primary Server: {0}", siteServer);
@@ -331,6 +340,4 @@ public class Enum
             return false;
         }
     }
-
-
 }

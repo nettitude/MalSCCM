@@ -5,41 +5,39 @@ namespace MalSCCM.Commands;
 
 public class App : ICommand
 {
-
     public string CommandName => "app";
     
     public static string AppName = "";
     public static string UNCPath = "";
     public static string AssignmentName = "";
 
-
     public void Execute(Dictionary<string, string> arguments)
     {
-        if (arguments.ContainsKey("/server"))
+        if (arguments.TryGetValue("/server", out var argument))
         {
-            Inspect.ServerName = arguments["/server"];
+            Inspect.ServerName = argument;
         }
 
         Console.WriteLine("[*] Action: Manipulating SCCM Applications");
 
-        if (arguments.ContainsKey("/groupname"))
+        if (arguments.TryGetValue("/groupname", out var argument1))
         {
-            Group.GroupName = arguments["/groupname"];
+            Group.GroupName = argument1;
         }
 
-        if (arguments.ContainsKey("/name"))
+        if (arguments.TryGetValue("/name", out var argument2))
         {
-            AppName = arguments["/name"];
+            AppName = argument2;
         }
 
-        if (arguments.ContainsKey("/uncpath"))
+        if (arguments.TryGetValue("/uncpath", out var argument3))
         {
-            UNCPath = arguments["/uncpath"];
+            UNCPath = argument3;
         }
 
-        if (arguments.ContainsKey("/assignmentname"))
+        if (arguments.TryGetValue("/assignmentname", out var argument4))
         {
-            AssignmentName = arguments["/assignmentname"];
+            AssignmentName = argument4;
         }
 
         if (!Enum.FbGetSiteScope())
@@ -85,7 +83,6 @@ public class App : ICommand
             Console.WriteLine("[*] Action: Deleting SCCM Application");
             Application.FbRemoveSCCMApplication();
         }
-
 
         Console.WriteLine("\r\n[*] App complete\r\n");
     }

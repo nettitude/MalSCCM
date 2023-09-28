@@ -12,9 +12,9 @@ public class Inspect : ICommand
 
     public void Execute(Dictionary<string, string> arguments)
     {
-        if (arguments.ContainsKey("/server"))
+        if (arguments.TryGetValue("/server", out var argument))
         {
-            ServerName = arguments["/server"];
+            ServerName = argument;
         }
 
         Console.WriteLine("[*] Action: Inspect SCCM Server");
@@ -89,9 +89,6 @@ public class Inspect : ICommand
             Console.WriteLine("\r\n[*] Action: Get SCCM Deployments");
             Enum.FbGetSCCMDeployments();
         }
-
-
-
 
         Console.WriteLine("\r\n[*] Inspect complete\r\n");
     }
