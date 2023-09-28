@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace MalSCCM.Commands
+namespace MalSCCM.Commands;
+
+public interface ICommand
 {
-    public interface ICommand
-    {
-        void Execute(Dictionary<string, string> arguments);
-    }
+    string CommandName { get; }
+    void Execute(Dictionary<string, string> arguments);
 }

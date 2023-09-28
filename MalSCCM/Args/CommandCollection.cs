@@ -1,48 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using MalSCCM.Commands;
 
-namespace MalSCCM.Args
+namespace MalSCCM.Args;
+
+public class CommandCollection
 {
-    public class CommandCollection
+    private readonly List<ICommand> _availableCommands = new();
+
+    // How To Add A New Command:
+    //  - Create your command class in the Commands Folder
+    //    - That class must implement the ICommand interface
+    //    - Give the command a name
+    //    - Put the code that does the work into the Execute() method
+
+    public CommandCollection()
     {
-        private readonly Dictionary<string, Func<ICommand>> _availableCommands = new Dictionary<string, Func<ICommand>>();
-
-        // How To Add A New Command:
-        //  1. Create your command class in the Commands Folder
-        //      a. That class must have a CommandName static property that has the Command's name
-        //              and must also Implement the ICommand interface
-        //      b. Put the code that does the work into the Execute() method
-        //  2. Add an entry to the _availableCommands dictionary in the Constructor below.
-
-        public CommandCollection()
+        // instantiate each command dynamically
+        
+        var self = typeof(CommandCollection).Assembly;
+        
+        // loop through each type
+        foreach (var type in self.GetTypes())
         {
-            _availableCommands.Add(Inspect.CommandName, () => new Inspect());
-            _availableCommands.Add(Group.CommandName, () => new Group());
-            _availableCommands.Add(App.CommandName, () => new App());
-            _availableCommands.Add(Checkin.CommandName, () => new Checkin());
-            _availableCommands.Add(Locate.CommandName, () => new Locate());
-
+            // ignore if they don't implement ICommand or if it's the interface itself
+            if (!typeof(ICommand).IsAssignableFrom(type) || type.Name.Equals("ICommand"))
+                continue;
+            
+            // instantiate a new instance
+            var command = (ICommand)Activator.CreateInstance(type);
+            _availableCommands.Add(command);
         }
+    }
 
-        public bool ExecuteCommand(string commandName, Dictionary<string, string> arguments)
-        {
-            bool commandWasFound;
+    public bool ExecuteCommand(string commandName, Dictionary<string, string> arguments)
+    {
+        // find the correct command, case-insensitive 
+        var command = _availableCommands.FirstOrDefault(c =>
+            c.CommandName.Equals(commandName, StringComparison.OrdinalIgnoreCase));
 
-            if (string.IsNullOrEmpty(commandName) || _availableCommands.ContainsKey(commandName) == false)
-                commandWasFound= false;
-            else
-            {
-                // Create the command object 
-                var command = _availableCommands[commandName].Invoke();
-                
-                // and execute it with the arguments from the command line
-                command.Execute(arguments);
-
-                commandWasFound = true;
-            }
-
-            return commandWasFound;
-        }
+        // return false if command is null (i.e. not found)
+        if (command is null)
+            return false;
+        
+        // otherwise execute and return true
+        command.Execute(arguments);
+        return true;
     }
 }

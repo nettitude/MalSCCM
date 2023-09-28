@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Linq;
 using System.Management;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using Microsoft.Win32;
+
 using MalSCCM.Commands;
 
-public class Enum
+public static class Enum
 {
     public static bool FbGetSiteScope()
     {
         try
         {
             var osQuery = new SelectQuery("SMS_Authority");
-            var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\ccm");
+            var mgmtScope = new ManagementScope($@"\\{Inspect.ServerName}\root\ccm");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, osQuery);
 
@@ -18,7 +21,6 @@ public class Enum
             {
                 var siteCode = result.GetPropertyValue("Name").ToString();
                 var managementServer = result.GetPropertyValue("CurrentManagementPoint").ToString();
-
                 
                 if (!string.IsNullOrEmpty(siteCode))
                 {
@@ -41,12 +43,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSiteScope2()
     {
         try
         {
             var osQuery = new SelectQuery("SMS_ProviderLocation");
-            var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms");
+            var mgmtScope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, osQuery);
 
@@ -74,12 +77,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSiteScope3()
     {
         try
         {
             const string keyName = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SMS\Mobile Client";
-            string assignedsitecode = (string)Registry.GetValue(keyName, "AssignedSiteCode", "No assigned site found, is this machine managed by SCCM?");
+            var assignedsitecode = (string)Registry.GetValue(keyName, "AssignedSiteCode", "No assigned site found, is this machine managed by SCCM?");
 
             Console.WriteLine("SiteCode: " + assignedsitecode);
             Inspect.SiteCode = assignedsitecode;
@@ -94,12 +98,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMComputer()
     {
         try
         {
             var Query = new SelectQuery("SMS_R_System");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -122,12 +127,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMADForest()
     {
         try
         {
             var Query = new SelectQuery("SMS_ADForest");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -150,12 +156,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMApplication()
     {
         try
         {
             var Query = new SelectQuery("SMS_Application");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -178,12 +185,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMPackage()
     {
         try
         {
             var Query = new SelectQuery("SMS_Package");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -206,12 +214,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMCollection()
     {
         try
         {
             var Query = new SelectQuery("SMS_Collection");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -245,7 +254,7 @@ public class Enum
         try
         {
             var Query = new SelectQuery("SMS_UserMachineRelationship");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -273,12 +282,13 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMDeployments()
     {
         try
         {
             var Query = new SelectQuery("SMS_ApplicationAssignment");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -306,16 +316,17 @@ public class Enum
             return false;
         }
     }
+    
     public static bool FbGetSCCMPrimaryServerRegKey()
     {
         try
         {
             const string keyName = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SMS\DP";
-            string mgmtServer = (string)Registry.GetValue(keyName, "ManagementPoints", "Management key not found, are you an SCCM client?");
-            string siteServer = (string)Registry.GetValue(keyName, "SiteServer", "Key not found, are you on a management server?");
+            var mgmtServer = (string)Registry.GetValue(keyName, "ManagementPoints", "Management key not found, are you an SCCM client?");
+            var siteServer = (string)Registry.GetValue(keyName, "SiteServer", "Key not found, are you on a management server?");
 
             const string keyNameID = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SMS\Identification";
-            string siteServerID = (string)Registry.GetValue(keyNameID, "Site Server", "Key not found, are you on a management server?");
+            var siteServerID = (string)Registry.GetValue(keyNameID, "Site Server", "Key not found, are you on a management server?");
 
             Console.WriteLine("Management Server: {0}", mgmtServer);
             Console.WriteLine("Primary Server: {0}", siteServer);
@@ -331,6 +342,41 @@ public class Enum
             return false;
         }
     }
+    
+    public static bool FbGetSCCMAdmins()
+    {
+        try
+        {
+            var query = new SelectQuery("SMS_Admin");
+            var scope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
+            scope.Connect();
 
+            var searcher = new ManagementObjectSearcher(scope, query);
 
+            foreach (var result in searcher.Get())
+            {
+                var logonName = result.GetPropertyValue("LogonName").ToString();
+                var adminSid = result.GetPropertyValue("AdminSid").ToString();
+                var roleNames = result.GetPropertyValue("RoleNames") as string[] ?? Array.Empty<string>();
+                var categoryNames = result.GetPropertyValue("CategoryNames") as string[] ?? Array.Empty<string>();
+                var collectionNames = result.GetPropertyValue("CollectionNames") as string[] ?? Array.Empty<string>();
+
+                Console.WriteLine("UserName: {0}", logonName);
+                Console.WriteLine("SID: {0}", adminSid);
+                Console.WriteLine("Roles: {0}", string.Join(", ", roleNames));
+                Console.WriteLine("Security Scopes: {0}", string.Join(", ", categoryNames));
+                Console.WriteLine("Collections: {0}", string.Join(", ", collectionNames));
+                Console.WriteLine();
+            }
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("\r\nFunction error - FbGetSCCMComputer.");
+            var stdErr = Console.Error;
+            stdErr.WriteLine($"Error Message: {e.Message}");
+            return false;
+        }
+    }
 }
