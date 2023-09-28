@@ -2,47 +2,46 @@
 using System.Collections.Generic;
 using MalSCCM.Commands;
 
-namespace MalSCCM.Args
+namespace MalSCCM.Args;
+
+public class CommandCollection
 {
-    public class CommandCollection
+    private readonly Dictionary<string, Func<ICommand>> _availableCommands = new Dictionary<string, Func<ICommand>>();
+
+    // How To Add A New Command:
+    //  1. Create your command class in the Commands Folder
+    //      a. That class must have a CommandName static property that has the Command's name
+    //              and must also Implement the ICommand interface
+    //      b. Put the code that does the work into the Execute() method
+    //  2. Add an entry to the _availableCommands dictionary in the Constructor below.
+
+    public CommandCollection()
     {
-        private readonly Dictionary<string, Func<ICommand>> _availableCommands = new Dictionary<string, Func<ICommand>>();
+        _availableCommands.Add(Inspect.CommandName, () => new Inspect());
+        _availableCommands.Add(Group.CommandName, () => new Group());
+        _availableCommands.Add(App.CommandName, () => new App());
+        _availableCommands.Add(Checkin.CommandName, () => new Checkin());
+        _availableCommands.Add(Locate.CommandName, () => new Locate());
 
-        // How To Add A New Command:
-        //  1. Create your command class in the Commands Folder
-        //      a. That class must have a CommandName static property that has the Command's name
-        //              and must also Implement the ICommand interface
-        //      b. Put the code that does the work into the Execute() method
-        //  2. Add an entry to the _availableCommands dictionary in the Constructor below.
+    }
 
-        public CommandCollection()
+    public bool ExecuteCommand(string commandName, Dictionary<string, string> arguments)
+    {
+        bool commandWasFound;
+
+        if (string.IsNullOrEmpty(commandName) || _availableCommands.ContainsKey(commandName) == false)
+            commandWasFound= false;
+        else
         {
-            _availableCommands.Add(Inspect.CommandName, () => new Inspect());
-            _availableCommands.Add(Group.CommandName, () => new Group());
-            _availableCommands.Add(App.CommandName, () => new App());
-            _availableCommands.Add(Checkin.CommandName, () => new Checkin());
-            _availableCommands.Add(Locate.CommandName, () => new Locate());
-
-        }
-
-        public bool ExecuteCommand(string commandName, Dictionary<string, string> arguments)
-        {
-            bool commandWasFound;
-
-            if (string.IsNullOrEmpty(commandName) || _availableCommands.ContainsKey(commandName) == false)
-                commandWasFound= false;
-            else
-            {
-                // Create the command object 
-                var command = _availableCommands[commandName].Invoke();
+            // Create the command object 
+            var command = _availableCommands[commandName].Invoke();
                 
-                // and execute it with the arguments from the command line
-                command.Execute(arguments);
+            // and execute it with the arguments from the command line
+            command.Execute(arguments);
 
-                commandWasFound = true;
-            }
-
-            return commandWasFound;
+            commandWasFound = true;
         }
+
+        return commandWasFound;
     }
 }

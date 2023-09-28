@@ -1,43 +1,42 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace MalSCCM.Args
+namespace MalSCCM.Args;
+
+public static class ArgumentParser
 {
-    public static class ArgumentParser
+    public static ArgumentParserResult Parse(IEnumerable<string> args)
     {
-        public static ArgumentParserResult Parse(IEnumerable<string> args)
+        var arguments = new Dictionary<string, string>();
+        try
         {
-            var arguments = new Dictionary<string, string>();
-            try
+            foreach (var argument in args)
             {
-                foreach (var argument in args)
+                var idx = argument.IndexOf(':');
+                if (idx > 0)
                 {
-                    var idx = argument.IndexOf(':');
+                    arguments[argument.Substring(0, idx)] = argument.Substring(idx + 1);
+                }
+                else
+                {
+                    idx = argument.IndexOf('=');
                     if (idx > 0)
                     {
                         arguments[argument.Substring(0, idx)] = argument.Substring(idx + 1);
                     }
                     else
                     {
-                        idx = argument.IndexOf('=');
-                        if (idx > 0)
-                        {
-                            arguments[argument.Substring(0, idx)] = argument.Substring(idx + 1);
-                        }
-                        else
-                        {
-                            arguments[argument] = string.Empty;
-                        }
+                        arguments[argument] = string.Empty;
                     }
                 }
+            }
 
-                return ArgumentParserResult.Success(arguments);
-            }
-            catch (System.Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                return ArgumentParserResult.Failure();
-            }
+            return ArgumentParserResult.Success(arguments);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return ArgumentParserResult.Failure();
         }
     }
 }
