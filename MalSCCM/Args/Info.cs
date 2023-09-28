@@ -28,7 +28,7 @@ public static class Info
                                  MalSCCM.exe locate
 
                              Inspect the primary server to gather SCCM information:
-                                 MalSCCM.exe inspect </server:PrimarySiteHostname> </all /computers /deployments /groups /applications /forest /packages /primaryusers>
+                                 MalSCCM.exe inspect </server:PrimarySiteHostname> </all /computers /deployments /groups /applications /forest /packages /primaryusers /admins>
 
                              Create/Modify/Delete Groups to add targets in for deploying malicious apps. Groups can either be for devices or users:
                                  MalSCCM.exe group /create /groupname:example /grouptype:[user|device] </server:PrimarySiteHostname>
