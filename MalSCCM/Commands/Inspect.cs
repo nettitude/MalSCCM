@@ -31,7 +31,6 @@ public class Inspect : ICommand
 
         if (arguments.ContainsKey("/all"))
         {
-
             Console.WriteLine("\r\n[*] Action: Get SCCM Computers");
             Enum.FbGetSCCMComputer();
             Console.WriteLine("\r\n[*] Action: Get SCCM AD Forest");
@@ -46,6 +45,8 @@ public class Inspect : ICommand
             Enum.FbGetSCCMPrimaryUser();
             Console.WriteLine("\r\n[*] Action: Get SCCM Deployments");
             Enum.FbGetSCCMDeployments();
+            Console.WriteLine("\r\n[*] Action: Get SCCM Admins");
+            Enum.FbGetSCCMAdmins();
         }
 
         if (arguments.ContainsKey("/computers"))
@@ -88,6 +89,12 @@ public class Inspect : ICommand
         {
             Console.WriteLine("\r\n[*] Action: Get SCCM Deployments");
             Enum.FbGetSCCMDeployments();
+        }
+
+        if (arguments.ContainsKey("/admins"))
+        {
+            Console.WriteLine("\r\n[*] Action: Get SCCM Admins");
+            Enum.FbGetSCCMAdmins();
         }
 
         Console.WriteLine("\r\n[*] Inspect complete\r\n");

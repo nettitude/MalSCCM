@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Management;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using Microsoft.Win32;
 
 using MalSCCM.Commands;
@@ -11,7 +13,7 @@ public static class Enum
         try
         {
             var osQuery = new SelectQuery("SMS_Authority");
-            var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\ccm");
+            var mgmtScope = new ManagementScope($@"\\{Inspect.ServerName}\root\ccm");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, osQuery);
 
@@ -47,7 +49,7 @@ public static class Enum
         try
         {
             var osQuery = new SelectQuery("SMS_ProviderLocation");
-            var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms");
+            var mgmtScope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, osQuery);
 
@@ -102,7 +104,7 @@ public static class Enum
         try
         {
             var Query = new SelectQuery("SMS_R_System");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -131,7 +133,7 @@ public static class Enum
         try
         {
             var Query = new SelectQuery("SMS_ADForest");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -160,7 +162,7 @@ public static class Enum
         try
         {
             var Query = new SelectQuery("SMS_Application");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -189,7 +191,7 @@ public static class Enum
         try
         {
             var Query = new SelectQuery("SMS_Package");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -218,7 +220,7 @@ public static class Enum
         try
         {
             var Query = new SelectQuery("SMS_Collection");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -252,7 +254,7 @@ public static class Enum
         try
         {
             var Query = new SelectQuery("SMS_UserMachineRelationship");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -286,7 +288,7 @@ public static class Enum
         try
         {
             var Query = new SelectQuery("SMS_ApplicationAssignment");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -335,6 +337,43 @@ public static class Enum
         catch (Exception e)
         {
             Console.WriteLine("\r\nFunction error - FbGetSCCMPrimaryServerRegKey.");
+            var stdErr = Console.Error;
+            stdErr.WriteLine($"Error Message: {e.Message}");
+            return false;
+        }
+    }
+    
+    public static bool FbGetSCCMAdmins()
+    {
+        try
+        {
+            var query = new SelectQuery("SMS_Admin");
+            var scope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
+            scope.Connect();
+
+            var searcher = new ManagementObjectSearcher(scope, query);
+
+            foreach (var result in searcher.Get())
+            {
+                var logonName = result.GetPropertyValue("LogonName").ToString();
+                var adminSid = result.GetPropertyValue("AdminSid").ToString();
+                var roleNames = result.GetPropertyValue("RoleNames") as string[] ?? Array.Empty<string>();
+                var categoryNames = result.GetPropertyValue("CategoryNames") as string[] ?? Array.Empty<string>();
+                var collectionNames = result.GetPropertyValue("CollectionNames") as string[] ?? Array.Empty<string>();
+
+                Console.WriteLine("UserName: {0}", logonName);
+                Console.WriteLine("SID: {0}", adminSid);
+                Console.WriteLine("Roles: {0}", string.Join(", ", roleNames));
+                Console.WriteLine("Security Scopes: {0}", string.Join(", ", categoryNames));
+                Console.WriteLine("Collections: {0}", string.Join(", ", collectionNames));
+                Console.WriteLine();
+            }
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("\r\nFunction error - FbGetSCCMComputer.");
             var stdErr = Console.Error;
             stdErr.WriteLine($"Error Message: {e.Message}");
             return false;

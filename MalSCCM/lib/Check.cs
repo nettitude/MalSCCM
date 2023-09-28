@@ -9,7 +9,7 @@ public static class Check
     {
         try
         {
-            var Class = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_ClientOperation");
+            var Class = new ManagementClass($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}:SMS_ClientOperation");
             var newInstance = Class.GetMethodParameters("InitiateClientOperation");
 
             newInstance["Type"] = 8;

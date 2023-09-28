@@ -10,7 +10,7 @@ public static class Groups
         try
         {
             var Query = new SelectQuery("SMS_Collection");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode);
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode);
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -53,7 +53,7 @@ public static class Groups
     {
         try
         {
-            var Class = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode + ":SMS_Collection");
+            var Class = new ManagementClass($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode + ":SMS_Collection");
             var newInstance = Class.CreateInstance();
 
             newInstance["Name"] = Group.GroupName;
@@ -92,7 +92,7 @@ public static class Groups
         try
         {
             var objHostSetting = new ManagementObject();
-            objHostSetting.Scope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode);
+            objHostSetting.Scope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode);
 
             //define lookup query  
             var strQuery = @"SMS_Collection.CollectionID='" + Group.TargetCollectionID + "'";
@@ -118,7 +118,7 @@ public static class Groups
         try
         {
             var Query = new SelectQuery("SMS_R_User");
-            var SCCMNamespace = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode);
+            var SCCMNamespace = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode);
             SCCMNamespace.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(SCCMNamespace, Query);
 
@@ -148,13 +148,13 @@ public static class Groups
     {
         try
         {
-            var collQuery = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode, "SMS_CollectionRuleQuery", null);
+            var collQuery = new ManagementClass($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode, "SMS_CollectionRuleQuery", null);
             var collQueryInstance = collQuery.CreateInstance();
 
             collQueryInstance["QueryExpression"] = "Select * from SMS_R_User Where UniqueUserName='" + Group.UserName + "'";
             collQueryInstance["RuleName"] = "Members of collection";
 
-            var collInstance = new ManagementObject($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode + ":SMS_Collection.CollectionID='" + Group.TargetCollectionID + "'");
+            var collInstance = new ManagementObject($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode + ":SMS_Collection.CollectionID='" + Group.TargetCollectionID + "'");
             var inParams = collInstance.GetMethodParameters("AddMembershipRule");
 
             Console.WriteLine("Commiting instance");
@@ -195,13 +195,13 @@ public static class Groups
     {
         try
         {
-            var collQuery = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode, "SMS_CollectionRuleQuery", null);
+            var collQuery = new ManagementClass($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode, "SMS_CollectionRuleQuery", null);
             var collQueryInstance = collQuery.CreateInstance();
 
             collQueryInstance["QueryExpression"] = "Select * from SMS_R_System Where Name='" + Group.DeviceName + "'";
             collQueryInstance["RuleName"] = "Members of collection";
 
-            var collInstance = new ManagementObject($"\\\\{Inspect.ServerName}\\root\\sms\\site_" + Inspect.SiteCode + ":SMS_Collection.CollectionID='" + Group.TargetCollectionID + "'");
+            var collInstance = new ManagementObject($@"\\{Inspect.ServerName}\root\sms\site_" + Inspect.SiteCode + ":SMS_Collection.CollectionID='" + Group.TargetCollectionID + "'");
             var inParams = collInstance.GetMethodParameters("AddMembershipRule");
 
             Console.WriteLine("Commiting instance");

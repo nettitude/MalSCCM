@@ -10,8 +10,8 @@ public static class Application
     {
         try
         {
-            var IDClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_Identification");
-            var AppClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_Application");
+            var IDClass = new ManagementClass($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}:SMS_Identification");
+            var AppClass = new ManagementClass($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}:SMS_Application");
 
             object[] methodArgs = {null};
 
@@ -83,7 +83,7 @@ public static class Application
         try
         {
             var Query = new SelectQuery($"Select * FROM SMS_Application WHERE LocalizedDisplayName = '{App.AppName}'");
-            var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var mgmtScope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, Query);
             var objColl = mgmtSrchr.Get();
@@ -112,11 +112,11 @@ public static class Application
     {
         try
         {
-            var AppAssignementClass = new ManagementClass($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}:SMS_ApplicationAssignment");
+            var AppAssignementClass = new ManagementClass($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}:SMS_ApplicationAssignment");
             var TargetCollectionID = Group.TargetCollectionID;
 
             var Query = new SelectQuery($"Select * FROM SMS_Application WHERE LocalizedDisplayName = '{App.AppName}'");
-            var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var mgmtScope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, Query);
             var CI_ID = "";
@@ -178,7 +178,7 @@ public static class Application
         try
         {
             var Query = new SelectQuery("Select * FROM SMS_ApplicationAssignment WHERE ApplicationName = '" + App.AppName + "'");
-            var mgmtScope = new ManagementScope($"\\\\{Inspect.ServerName}\\root\\sms\\site_{Inspect.SiteCode}");
+            var mgmtScope = new ManagementScope($@"\\{Inspect.ServerName}\root\sms\site_{Inspect.SiteCode}");
             mgmtScope.Connect();
             var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, Query);
             var objColl = mgmtSrchr.Get();
